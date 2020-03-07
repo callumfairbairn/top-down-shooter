@@ -1,5 +1,5 @@
 precommit:
-	npm audit
+	npm audit fix
 	npm test
 	npm run lint
 
