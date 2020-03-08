@@ -12,8 +12,8 @@ const App = () => {
   const polarLocation = convertPixelsToPolar({ x: mousePosition.x, y: mousePosition.y }, screenSize)
   const maxRadius = Math.sqrt(Math.pow(screenSize.x, 2), Math.pow(screenSize.y, 2))
   const centreLineEnd = convertPolarToPixels({ r: maxRadius, phi: polarLocation.phi }, screenSize)
-  const lineEnd1 = convertPolarToPixels({ r: maxRadius, phi: polarLocation.phi + PI / 32 }, screenSize)
-  const lineEnd2 = convertPolarToPixels({ r: maxRadius, phi: polarLocation.phi - PI / 32 }, screenSize)
+  const polygonCoord1 = convertPolarToPixels({ r: maxRadius, phi: polarLocation.phi + PI / 32 }, screenSize)
+  const polygonCoord2 = convertPolarToPixels({ r: maxRadius, phi: polarLocation.phi - PI / 32 }, screenSize)
 
   useEffect(() => {
     setEventListener(setMousePosition)
@@ -31,19 +31,13 @@ const App = () => {
           x2={`${centreLineEnd.x}`}
           y2={`${centreLineEnd.y}`}
         />
-        <line
-          className='line'
-          x1={`${window.innerWidth / 2 + 0.5}`}
-          y1={`${window.innerHeight / 2 + 0.5}`}
-          x2={`${lineEnd1.x}`}
-          y2={`${lineEnd1.y}`}
-        />
-        <line
-          className='line'
-          x1={`${window.innerWidth / 2 + 0.5}`}
-          y1={`${window.innerHeight / 2 + 0.5}`}
-          x2={`${lineEnd2.x}`}
-          y2={`${lineEnd2.y}`}
+        <polygon
+          className='triangle'
+          points={`
+            ${window.innerWidth / 2 + 0.5},${window.innerHeight / 2 + 0.5}, 
+            ${polygonCoord1.x},${polygonCoord1.y},
+            ${polygonCoord2.x},${polygonCoord2.y},
+          `}
         />
       </svg>
     </div>

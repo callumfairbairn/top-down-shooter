@@ -19,12 +19,14 @@
     width: 100vw;
   }
 
-  .line {
-    stroke: black;
-    stroke-width: 1;
+  .triangle {
+    fill: aqua;
+    opacity: 50%;
   }
 
   #centre-line {
+    stroke: black;
+    stroke-width: 1;
     stroke-dasharray: 5, 5;
   }
 }
