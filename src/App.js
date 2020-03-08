@@ -25,6 +25,7 @@ const App = () => {
       <svg className='line-container'>
         <line
           className='line'
+          id='centre-line'
           x1={`${window.innerWidth / 2 + 0.5}`}
           y1={`${window.innerHeight / 2 + 0.5}`}
           x2={`${centreLineEnd.x}`}
