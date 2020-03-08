@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useCallback } from 'react'
 
 import './App.scss'
 import { convertPixelsToPolar } from './functions/PolarCoordinates/PixelsToPolar/convertPixelsToPolar'
@@ -17,8 +17,21 @@ const App = () => {
   const polygonCoord2 = convertPolarToPixels({ r: maxRadius, phi: polarLocation.phi - inaccuracy }, screenSize)
 
   useEffect(() => {
-    setEventListener(setMousePosition, inaccuracy, setInaccuracy)
+    const app = document.getElementById('app')
+    app.addEventListener('mousemove', (e) => {
+      setMousePosition({ x: e.offsetX, y: e.offsetY })
+    })
+  }, [])
+
+  const inaccuracyEventListener = useCallback(() => {
+    setInaccuracy(inaccuracy - 0.0005)
   }, [inaccuracy])
+
+  useEffect(() => {
+    const app = document.getElementById('app')
+    app.addEventListener('mousemove', inaccuracyEventListener)
+    return () => app.removeEventListener('mousemove', inaccuracyEventListener)
+  }, [inaccuracyEventListener])
 
   return (
     <div className='app' id='app'>
@@ -34,27 +47,11 @@ const App = () => {
         />
         <polygon
           className='triangle'
-          points={`
-            ${window.innerWidth / 2 + 0.5},${window.innerHeight / 2 + 0.5}, 
-            ${polygonCoord1.x},${polygonCoord1.y},
-            ${polygonCoord2.x},${polygonCoord2.y},
-          `}
+          points={`${window.innerWidth / 2 + 0.5},${window.innerHeight / 2 + 0.5} ${polygonCoord1.x},${polygonCoord1.y} ${polygonCoord2.x},${polygonCoord2.y}`}
         />
       </svg>
     </div>
   )
-}
-
-const setEventListener = (setMousePosition, inaccuracy, setInaccuracy) => {
-  const app = document.getElementById('app')
-
-  app.addEventListener('mousemove', (e) => {
-    setMousePosition({ x: e.offsetX, y: e.offsetY })
-  })
-
-  app.addEventListener('click', (e) => {
-    setInaccuracy(inaccuracy * 0.5)
-  })
 }
 
 export default App
