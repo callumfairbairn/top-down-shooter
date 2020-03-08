@@ -1,4 +1,4 @@
-import { PI } from '../../constants'
+import { PI } from '../../../constants'
 
 export const getPhi = (cartesianLocation) => {
   if (cartesianLocation.x >= 0) {

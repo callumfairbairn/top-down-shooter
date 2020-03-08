@@ -1,5 +1,5 @@
 import { convertPixelsToPolar } from './convertPixelsToPolar'
-import { PI } from '../../constants'
+import { PI } from '../../../constants'
 
 describe('convertPixelsToPolar', () => {
   it('returns { r: 25, phi: 0 } for { x: 25, y: 0 } ', () => {

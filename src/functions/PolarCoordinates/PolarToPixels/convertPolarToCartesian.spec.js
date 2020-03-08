@@ -1,5 +1,5 @@
 import { convertPolarToCartesian } from './convertPolarToCartesian'
-import { PI } from '../../constants'
+import { PI } from '../../../constants'
 
 describe('convertPolarToCartesian', () => {
   it('converts { r: 25 , phi: 0 } to { x: 0 , y: 25 }', () => {

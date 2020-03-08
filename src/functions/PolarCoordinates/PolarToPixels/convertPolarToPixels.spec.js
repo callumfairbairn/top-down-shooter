@@ -1,5 +1,5 @@
 import { convertPolarToPixels } from './convertPolarToPixels'
-import { convertPixelsToPolar } from './convertPixelsToPolar'
+import { convertPixelsToPolar } from '../PixelsToPolar/convertPixelsToPolar'
 
 describe('convertPolarToPixels', () => {
   it('converts { r: 25 , phi: 0 } to { x: 25 , y: 0 }', () => {

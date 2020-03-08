@@ -1,5 +1,5 @@
 import { firstQuadrantAngle, fourthQuadrantAngle, getPhi, secondQuadrantAngle, thirdQuadrantAngle } from './getPhi'
-import { PI } from '../../constants'
+import { PI } from '../../../constants'
 
 describe('getPhi', () => {
   it('converts { x: 0 , y: 1 } to 0', () => {
