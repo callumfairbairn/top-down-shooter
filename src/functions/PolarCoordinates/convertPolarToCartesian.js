@@ -6,5 +6,5 @@ export const convertPolarToCartesian = (polarLocation) => {
 }
 
 const convertNegativeZero = (number) => {
-  return number === -0 ? 0 : number
+  return number === 0 ? 0 : number
 }
