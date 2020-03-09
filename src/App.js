@@ -35,8 +35,8 @@ const App = () => {
 
   return (
     <div className='app' id='app'>
-      <div className='dot' />
       <svg className='line-container'>
+        <circle cx={`${window.innerWidth / 2 + 0.5}`} cy={`${window.innerHeight / 2 + 0.5}`} r='3' />
         <line
           className='line'
           id='centre-line'
