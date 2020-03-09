@@ -24,9 +24,18 @@
     opacity: 50%;
   }
 
-  #centre-line {
+  .line {
     stroke: black;
     stroke-width: 1;
+  }
+
+  #border {
+    fill: none;
+    stroke-width: 2;
+    stroke: black;
+  }
+
+  #centre-line {
     stroke-dasharray: 5, 5;
   }
 }

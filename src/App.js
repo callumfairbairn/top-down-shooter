@@ -36,7 +36,11 @@ const App = () => {
   return (
     <div className='app' id='app'>
       <svg className='line-container'>
-        <circle cx={`${window.innerWidth / 2 + 0.5}`} cy={`${window.innerHeight / 2 + 0.5}`} r='3' />
+        <circle className='dot' cx={`${window.innerWidth / 2 + 0.5}`} cy={`${window.innerHeight / 2 + 0.5}`} r='3' />
+        <polygon
+          className='polygon' id='border'
+          points={`50,50 50,${screenSize.y - 50} ${screenSize.x - 50},${screenSize.y - 50} ${screenSize.x - 50},50`}
+        />
         <line
           className='line'
           id='centre-line'
