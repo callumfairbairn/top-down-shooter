@@ -8,6 +8,7 @@ import { PI } from './constants'
 const App = () => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
   const [inaccuracy, setInaccuracy] = useState(PI / 32)
+  const [position, setPosition] = useState({ x: 0, y: 0 })
 
   const screenSize = { x: window.innerWidth, y: window.innerHeight }
   const polarLocation = convertPixelsToPolar({ x: mousePosition.x, y: mousePosition.y }, screenSize)
@@ -16,22 +17,31 @@ const App = () => {
   const polygonCoord1 = convertPolarToPixels({ r: maxRadius, phi: polarLocation.phi + inaccuracy }, screenSize)
   const polygonCoord2 = convertPolarToPixels({ r: maxRadius, phi: polarLocation.phi - inaccuracy }, screenSize)
 
+  const mouseMoveEventListener = (e) => {
+    setMousePosition({ x: e.offsetX, y: e.offsetY })
+  }
+
   useEffect(() => {
     const app = document.getElementById('app')
-    app.addEventListener('mousemove', (e) => {
-      setMousePosition({ x: e.offsetX, y: e.offsetY })
-    })
+    app.addEventListener('mousemove', mouseMoveEventListener)
   }, [])
 
-  const inaccuracyEventListener = useCallback(() => {
-    setInaccuracy(inaccuracy - 0.0005)
-  }, [inaccuracy])
+  const keyDownEventListener = useCallback((e) => {
+    if (e.keyCode === 65) {
+      setPosition({ x: position.x - 6, y: position.y })
+    } else if (e.keyCode === 87) {
+      setPosition({ x: position.x, y: position.y - 6 })
+    } else if (e.keyCode === 68) {
+      setPosition({ x: position.x + 6, y: position.y })
+    } else if (e.keyCode === 83) {
+      setPosition({ x: position.x, y: position.y + 6 })
+    }
+  }, [position])
 
   useEffect(() => {
-    const app = document.getElementById('app')
-    app.addEventListener('mousemove', inaccuracyEventListener)
-    return () => app.removeEventListener('mousemove', inaccuracyEventListener)
-  }, [inaccuracyEventListener])
+    window.addEventListener('keydown', keyDownEventListener)
+    return () => window.removeEventListener('keydown', keyDownEventListener)
+  }, [keyDownEventListener])
 
   return (
     <div className='app' id='app'>
@@ -39,7 +49,7 @@ const App = () => {
         <circle className='dot' cx={`${window.innerWidth / 2 + 0.5}`} cy={`${window.innerHeight / 2 + 0.5}`} r='3' />
         <polygon
           className='polygon' id='border'
-          points={`50,50 50,${screenSize.y - 50} ${screenSize.x - 50},${screenSize.y - 50} ${screenSize.x - 50},50`}
+          points={`${200 - position.x},${200 - position.y} ${200 - position.x},${screenSize.y - 200 - position.y} ${screenSize.x - 200 - position.x},${screenSize.y - 200 - position.y} ${screenSize.x - 200 - position.x},${200 - position.y}`}
         />
         <line
           className='line'
