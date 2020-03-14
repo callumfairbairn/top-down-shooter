@@ -3,7 +3,12 @@ import React, { useEffect, useState, useCallback } from 'react'
 import './App.scss'
 import { convertPixelsToPolar } from './functions/PolarCoordinates/PixelsToPolar/convertPixelsToPolar'
 import { convertPolarToPixels } from './functions/PolarCoordinates/PolarToPixels/convertPolarToPixels'
-import { PI } from './constants'
+import { borderInset, PI } from './constants'
+import {
+  getBottomLeftBorderCoord,
+  getBottomRightBorderCoord,
+  getTopLeftBorderCoord, getTopRightBorderCoord
+} from './functions/Border/borderCoordinates'
 
 const App = () => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
@@ -12,7 +17,7 @@ const App = () => {
 
   const screenSize = { x: window.innerWidth, y: window.innerHeight }
   const polarLocation = convertPixelsToPolar({ x: mousePosition.x, y: mousePosition.y }, screenSize)
-  const maxRadius = Math.sqrt(Math.pow(screenSize.x, 2), Math.pow(screenSize.y, 2))
+  const maxRadius = Math.sqrt(Math.pow(screenSize.x, 2) + Math.pow(screenSize.y, 2))
   const centreLineEnd = convertPolarToPixels({ r: maxRadius, phi: polarLocation.phi }, screenSize)
   const polygonCoord1 = convertPolarToPixels({ r: maxRadius, phi: polarLocation.phi + inaccuracy }, screenSize)
   const polygonCoord2 = convertPolarToPixels({ r: maxRadius, phi: polarLocation.phi - inaccuracy }, screenSize)
@@ -49,7 +54,7 @@ const App = () => {
         <circle className='dot' cx={`${window.innerWidth / 2 + 0.5}`} cy={`${window.innerHeight / 2 + 0.5}`} r='3' />
         <polygon
           className='polygon' id='border'
-          points={`${200 - position.x},${200 - position.y} ${200 - position.x},${screenSize.y - 200 - position.y} ${screenSize.x - 200 - position.x},${screenSize.y - 200 - position.y} ${screenSize.x - 200 - position.x},${200 - position.y}`}
+          points={`${getTopLeftBorderCoord(borderInset, position)} ${getBottomLeftBorderCoord(borderInset, position, screenSize)} ${getBottomRightBorderCoord(borderInset, position, screenSize)} ${getTopRightBorderCoord(borderInset, position, screenSize)}`}
         />
         <line
           className='line'
