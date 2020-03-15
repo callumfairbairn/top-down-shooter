@@ -1,3 +1,3 @@
 export const PI = Math.PI
 
-export const borderInset = 50
+export const borderInset = 100
