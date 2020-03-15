@@ -8,19 +8,35 @@ import React, { useEffect, useState, useRef, useCallback } from 'react'
 import { convertPixelsToPolar } from '../functions/PolarCoordinates/PixelsToPolar/convertPixelsToPolar'
 import { convertPolarToPixels } from '../functions/PolarCoordinates/PolarToPixels/convertPolarToPixels'
 import { useAnimationFrame } from '../functions/useAnimationFrame'
+import { updateKeys } from '../functions/updateKeys'
 
 export const Canvas = ({ mousePosition, inaccuracy }) => {
   const [position, setPosition] = useState({ x: 0, y: 0 })
   const keyDownRef = useRef()
+  const keyUpRef = useRef()
+  const keysRef = useRef({
+    65: false,
+    87: false,
+    68: false,
+    83: false,
+  })
 
   const keyDownEventListener = useCallback((e) => {
     keyDownRef.current = e.keyCode
   }, [])
 
+  const keyUpEventListener = useCallback((e) => {
+    keyUpRef.current = e.keyCode
+  }, [])
+
   useEffect(() => {
     window.addEventListener('keydown', keyDownEventListener)
-    return () => window.removeEventListener('keydown', keyDownEventListener)
-  }, [keyDownEventListener])
+    window.addEventListener('keyup', keyUpEventListener)
+    return () => {
+      window.removeEventListener('keydown', keyDownEventListener)
+      window.removeEventListener('keyup', keyUpEventListener)
+    }
+  }, [keyDownEventListener, keyUpEventListener])
 
   const screenSize = { x: window.innerWidth, y: window.innerHeight }
   const polarLocation = convertPixelsToPolar({ x: mousePosition.x, y: mousePosition.y }, screenSize)
@@ -30,14 +46,18 @@ export const Canvas = ({ mousePosition, inaccuracy }) => {
   const polygonCoord2 = convertPolarToPixels({ r: maxRadius, phi: polarLocation.phi - inaccuracy }, screenSize)
 
   useAnimationFrame(deltaTime => {
-    if (keyDownRef.current !== undefined) {
-      if (keyDownRef.current === 65) {
+    updateKeys(keyDownRef, keyUpRef, keysRef)
+    if (keysRef.current !== undefined) {
+      if (keysRef.current[65]) {
         setPosition(prevPosition => ({ x: prevPosition.x - deltaTime * 0.5, y: prevPosition.y }))
-      } else if (keyDownRef.current === 87) {
+      }
+      if (keysRef.current[87]) {
         setPosition(prevPosition => ({ x: prevPosition.x, y: prevPosition.y - deltaTime * 0.5 }))
-      } else if (keyDownRef.current === 68) {
+      }
+      if (keysRef.current[68]) {
         setPosition(prevPosition => ({ x: prevPosition.x + deltaTime * 0.5, y: prevPosition.y }))
-      } else if (keyDownRef.current === 83) {
+      }
+      if (keysRef.current[83]) {
         setPosition(prevPosition => ({ x: prevPosition.x, y: prevPosition.y + deltaTime * 0.5 }))
       }
     }
