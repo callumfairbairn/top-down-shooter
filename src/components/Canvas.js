@@ -29,7 +29,7 @@ export const Canvas = ({ mousePosition }) => {
     68: false,
     83: false
   })
-  const inaccuracyRef = useRef(PI / 32)
+  const inaccuracyRef = useRef(0)
 
   const keyDownEventListener = useCallback((e) => {
     keyDownRef.current = e.keyCode

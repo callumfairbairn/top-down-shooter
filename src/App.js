@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 
 import './App.scss'
-import { PI } from './constants'
 import { Canvas } from './components/Canvas'
 
 const App = () => {

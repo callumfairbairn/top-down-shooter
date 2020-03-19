@@ -5,7 +5,7 @@ export const updateInaccuracy = (inaccuracyRef, speedRef) => {
   const roundedOverallSpeed = overallSpeed.toFixed(2)
   console.log(roundedOverallSpeed)
   if (overallSpeed > maxSpeed / 4) {
-    inaccuracyRef.current = PI / 32
+    inaccuracyRef.current = PI / 32 * maxSpeed / 4
   } else {
     inaccuracyRef.current = PI / 32 * roundedOverallSpeed
   }
