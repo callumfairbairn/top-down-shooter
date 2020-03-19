@@ -6,7 +6,6 @@ import { Canvas } from './components/Canvas'
 
 const App = () => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
-  const [inaccuracy, setInaccuracy] = useState(PI / 32)
 
   const mouseMoveEventListener = (e) => {
     setMousePosition({ x: e.offsetX, y: e.offsetY })
@@ -22,7 +21,6 @@ const App = () => {
     <div className='app' id='app'>
       <Canvas
         mousePosition={mousePosition}
-        inaccuracy={inaccuracy}
       />
     </div>
   )

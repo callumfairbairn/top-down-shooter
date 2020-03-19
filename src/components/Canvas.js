@@ -1,17 +1,19 @@
 import {
   getBottomLeftBorderCoord,
   getBottomRightBorderCoord,
-  getTopLeftBorderCoord, getTopRightBorderCoord
+  getTopLeftBorderCoord,
+  getTopRightBorderCoord
 } from '../functions/Border/borderCoordinates'
-import { acceleration, borderInset, maxSpeed } from '../constants'
-import React, { useEffect, useState, useRef, useCallback } from 'react'
+import { borderInset, PI } from '../constants'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { convertPixelsToPolar } from '../functions/PolarCoordinates/PixelsToPolar/convertPixelsToPolar'
 import { convertPolarToPixels } from '../functions/PolarCoordinates/PolarToPixels/convertPolarToPixels'
 import { useAnimationFrame } from '../functions/useAnimationFrame'
 import { updateKeys } from '../functions/updateKeys'
 import { updateSpeed } from '../functions/updateSpeed'
+import { updateInaccuracy } from '../functions/updateInaccuracy'
 
-export const Canvas = ({ mousePosition, inaccuracy }) => {
+export const Canvas = ({ mousePosition }) => {
   const [position, setPosition] = useState({ x: 0, y: 0 })
   const speedRef = useRef({
     65: 0,
@@ -27,6 +29,7 @@ export const Canvas = ({ mousePosition, inaccuracy }) => {
     68: false,
     83: false
   })
+  const inaccuracyRef = useRef(PI / 32)
 
   const keyDownEventListener = useCallback((e) => {
     keyDownRef.current = e.keyCode
@@ -49,13 +52,13 @@ export const Canvas = ({ mousePosition, inaccuracy }) => {
   const polarLocation = convertPixelsToPolar({ x: mousePosition.x, y: mousePosition.y }, screenSize)
   const maxRadius = Math.sqrt(Math.pow(screenSize.x, 2) + Math.pow(screenSize.y, 2))
   const centreLineEnd = convertPolarToPixels({ r: maxRadius, phi: polarLocation.phi }, screenSize)
-  const polygonCoord1 = convertPolarToPixels({ r: maxRadius, phi: polarLocation.phi + inaccuracy }, screenSize)
-  const polygonCoord2 = convertPolarToPixels({ r: maxRadius, phi: polarLocation.phi - inaccuracy }, screenSize)
+  const polygonCoord1 = convertPolarToPixels({ r: maxRadius, phi: polarLocation.phi + inaccuracyRef.current }, screenSize)
+  const polygonCoord2 = convertPolarToPixels({ r: maxRadius, phi: polarLocation.phi - inaccuracyRef.current }, screenSize)
 
-  useAnimationFrame(deltaTime => {
+  useAnimationFrame(() => {
     updateKeys(keyDownRef, keyUpRef, keysRef)
     updateSpeed(keysRef, speedRef)
-    console.log(speedRef.current)
+    updateInaccuracy(inaccuracyRef, speedRef)
     if (keysRef.current !== undefined) {
       setPosition(prevPosition => ({ x: prevPosition.x - speedRef.current[65], y: prevPosition.y }))
       setPosition(prevPosition => ({ x: prevPosition.x, y: prevPosition.y - speedRef.current[87] }))
