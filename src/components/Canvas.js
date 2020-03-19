@@ -12,6 +12,7 @@ import { useAnimationFrame } from '../functions/useAnimationFrame'
 import { updateKeys } from '../functions/updateKeys'
 import { updateSpeed } from '../functions/updateSpeed'
 import { updateInaccuracy } from '../functions/updateInaccuracy'
+import { updateResultantSpeed } from '../functions/updateResultantSpeed'
 
 export const Canvas = ({ mousePosition }) => {
   const [position, setPosition] = useState({ x: 0, y: 0 })
@@ -20,6 +21,10 @@ export const Canvas = ({ mousePosition }) => {
     87: 0,
     68: 0,
     83: 0
+  })
+  const resultantSpeedRef = useRef({
+    x: 0,
+    y: 0
   })
   const keyDownRef = useRef()
   const keyUpRef = useRef()
@@ -58,7 +63,9 @@ export const Canvas = ({ mousePosition }) => {
   useAnimationFrame(() => {
     updateKeys(keyDownRef, keyUpRef, keysRef)
     updateSpeed(keysRef, speedRef)
-    updateInaccuracy(inaccuracyRef, speedRef)
+    updateResultantSpeed(speedRef, resultantSpeedRef)
+    updateInaccuracy(inaccuracyRef, resultantSpeedRef)
+
     if (keysRef.current !== undefined) {
       setPosition(prevPosition => ({ x: prevPosition.x - speedRef.current[65], y: prevPosition.y }))
       setPosition(prevPosition => ({ x: prevPosition.x, y: prevPosition.y - speedRef.current[87] }))
