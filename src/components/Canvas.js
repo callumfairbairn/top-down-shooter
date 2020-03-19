@@ -3,22 +3,29 @@ import {
   getBottomRightBorderCoord,
   getTopLeftBorderCoord, getTopRightBorderCoord
 } from '../functions/Border/borderCoordinates'
-import { borderInset } from '../constants'
+import { acceleration, borderInset, maxSpeed } from '../constants'
 import React, { useEffect, useState, useRef, useCallback } from 'react'
 import { convertPixelsToPolar } from '../functions/PolarCoordinates/PixelsToPolar/convertPixelsToPolar'
 import { convertPolarToPixels } from '../functions/PolarCoordinates/PolarToPixels/convertPolarToPixels'
 import { useAnimationFrame } from '../functions/useAnimationFrame'
 import { updateKeys } from '../functions/updateKeys'
+import { updateSpeed } from '../functions/updateSpeed'
 
 export const Canvas = ({ mousePosition, inaccuracy }) => {
   const [position, setPosition] = useState({ x: 0, y: 0 })
+  const speedRef = useRef({
+    65: 0,
+    87: 0,
+    68: 0,
+    83: 0
+  })
   const keyDownRef = useRef()
   const keyUpRef = useRef()
   const keysRef = useRef({
     65: false,
     87: false,
     68: false,
-    83: false,
+    83: false
   })
 
   const keyDownEventListener = useCallback((e) => {
@@ -47,19 +54,13 @@ export const Canvas = ({ mousePosition, inaccuracy }) => {
 
   useAnimationFrame(deltaTime => {
     updateKeys(keyDownRef, keyUpRef, keysRef)
+    updateSpeed(keysRef, speedRef)
+    console.log(speedRef.current)
     if (keysRef.current !== undefined) {
-      if (keysRef.current[65]) {
-        setPosition(prevPosition => ({ x: prevPosition.x - deltaTime * 0.5, y: prevPosition.y }))
-      }
-      if (keysRef.current[87]) {
-        setPosition(prevPosition => ({ x: prevPosition.x, y: prevPosition.y - deltaTime * 0.5 }))
-      }
-      if (keysRef.current[68]) {
-        setPosition(prevPosition => ({ x: prevPosition.x + deltaTime * 0.5, y: prevPosition.y }))
-      }
-      if (keysRef.current[83]) {
-        setPosition(prevPosition => ({ x: prevPosition.x, y: prevPosition.y + deltaTime * 0.5 }))
-      }
+      setPosition(prevPosition => ({ x: prevPosition.x - speedRef.current[65], y: prevPosition.y }))
+      setPosition(prevPosition => ({ x: prevPosition.x, y: prevPosition.y - speedRef.current[87] }))
+      setPosition(prevPosition => ({ x: prevPosition.x + speedRef.current[68], y: prevPosition.y }))
+      setPosition(prevPosition => ({ x: prevPosition.x, y: prevPosition.y +  speedRef.current[83] }))
     }
   })
 
