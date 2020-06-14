@@ -23,18 +23,26 @@ export const Canvas = ({ mousePosition }) => {
     s: false,
     d: false
   }
-  const speedRef = useRef({
+  const speedObj = {
     w: 0,
     a: 0,
     s: 0,
     d: 0
-  })
-  const resultantSpeedRef = useRef({
+  }
+  const resultantSpeed = {
     x: 0,
     y: 0
-  })
-  const inaccuracyRef = useRef(0)
+  }
+  let inaccuracyRef = useRef(0)
 
+  useAnimationFrame(() => {
+    updateKeys(keyObj)
+    updateSpeed(speedObj, keyObj)
+    updateResultantSpeed(speedObj, resultantSpeed)
+    updateInaccuracy(inaccuracyRef, resultantSpeed)
+    updatePosition(speedObj, setPosition)
+  })
+  
   const screenSize = { x: window.innerWidth, y: window.innerHeight }
   const polarLocation = convertPixelsToPolar({ x: mousePosition.x, y: mousePosition.y }, screenSize)
   const maxRadius = Math.sqrt(Math.pow(screenSize.x, 2) + Math.pow(screenSize.y, 2))
@@ -42,13 +50,6 @@ export const Canvas = ({ mousePosition }) => {
   const polygonCoord1 = convertPolarToPixels({ r: maxRadius, phi: polarLocation.phi + inaccuracyRef.current }, screenSize)
   const polygonCoord2 = convertPolarToPixels({ r: maxRadius, phi: polarLocation.phi - inaccuracyRef.current }, screenSize)
 
-  useAnimationFrame(() => {
-    updateKeys(keyObj)
-    updateSpeed(speedRef, keyObj)
-    updateResultantSpeed(speedRef, resultantSpeedRef)
-    updateInaccuracy(inaccuracyRef, resultantSpeedRef)
-    updatePosition(speedRef, setPosition)
-  })
 
   return <svg className='line-container'>
     <circle className='dot' cx={`${window.innerWidth / 2 + 0.5}`} cy={`${window.innerHeight / 2 + 0.5}`} r='3'/>

@@ -1,7 +1,7 @@
 import { maxSpeed, PI } from '../constants'
 
-export const updateInaccuracy = (inaccuracyRef, resultantSpeedRef) => {
-  const overallSpeed = (Math.abs(resultantSpeedRef.current.x) + Math.abs(resultantSpeedRef.current.y)) / 2
+export const updateInaccuracy = (inaccuracyRef, resultantSpeed) => {
+  const overallSpeed = (Math.abs(resultantSpeed.x) + Math.abs(resultantSpeed.y)) / 2
   const roundedOverallSpeed = overallSpeed.toFixed(2)
   if (overallSpeed > maxSpeed) {
     inaccuracyRef.current = PI / 32

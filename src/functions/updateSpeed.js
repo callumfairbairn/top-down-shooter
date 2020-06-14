@@ -1,20 +1,20 @@
 import { acceleration, deceleration, maxSpeed } from '../constants'
 
-export const updateSpeed = (speedRef, keyObj) => {
-  if (speedRef.current !== undefined) {
-    Object.keys(speedRef.current).forEach(key => {
-      const prevSpeed = speedRef.current[key]
+export const updateSpeed = (speedObj, keyObj) => {
+  if (speedObj !== undefined) {
+    Object.keys(speedObj).forEach(key => {
+      const prevSpeed = speedObj[key]
 
       if (keyObj[key] === true) {
         const newSpeed = prevSpeed * acceleration + 0.5
 
         if (newSpeed > maxSpeed) {
-          speedRef.current[key] = maxSpeed
+          speedObj[key] = maxSpeed
         } else {
-          speedRef.current[key] = newSpeed
+          speedObj[key] = newSpeed
         }
       } else {
-        speedRef.current[key] = prevSpeed * deceleration
+        speedObj[key] = prevSpeed * deceleration
       }
     })
   }
