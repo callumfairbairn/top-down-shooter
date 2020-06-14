@@ -10,11 +10,11 @@ export const useAnimationFrame = callback => {
       callback(deltaTime)
     }
     prevTimeRef.current = time
-    requestRef.current = requestAnimationFrame(update)
+    requestRef.current = requestAnimationFrame(update) // eslint-disable-line
   }
 
   useEffect(() => {
-    requestRef.current = requestAnimationFrame(update)
-    return () => cancelAnimationFrame(requestRef.current)
+    requestRef.current = requestAnimationFrame(update) // eslint-disable-line
+    return () => cancelAnimationFrame(requestRef.current) // eslint-disable-line
   }, [])
 }

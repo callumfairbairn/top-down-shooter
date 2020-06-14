@@ -27,7 +27,7 @@ export const Canvas = ({ mousePosition, keyObj }) => {
     x: 0,
     y: 0
   }
-  let inaccuracyRef = useRef(0)
+  const inaccuracyRef = useRef(0)
 
   useAnimationFrame(() => {
     updateSpeed(speedObj, keyObj)
@@ -35,7 +35,7 @@ export const Canvas = ({ mousePosition, keyObj }) => {
     updateInaccuracy(inaccuracyRef, resultantSpeed)
     updatePosition(speedObj, setPosition)
   })
-  
+
   const screenSize = { x: window.innerWidth, y: window.innerHeight }
   const polarLocation = convertPixelsToPolar({ x: mousePosition.x, y: mousePosition.y }, screenSize)
   const maxRadius = Math.sqrt(Math.pow(screenSize.x, 2) + Math.pow(screenSize.y, 2))
@@ -43,24 +43,25 @@ export const Canvas = ({ mousePosition, keyObj }) => {
   const polygonCoord1 = convertPolarToPixels({ r: maxRadius, phi: polarLocation.phi + inaccuracyRef.current }, screenSize)
   const polygonCoord2 = convertPolarToPixels({ r: maxRadius, phi: polarLocation.phi - inaccuracyRef.current }, screenSize)
 
-
-  return <svg className='line-container'>
-    <circle className='dot' cx={`${window.innerWidth / 2 + 0.5}`} cy={`${window.innerHeight / 2 + 0.5}`} r='3'/>
-    <polygon
-      className='polygon' id='border'
-      points={`${getTopLeftBorderCoord(borderInset, position)} ${getBottomLeftBorderCoord(borderInset, position, screenSize)} ${getBottomRightBorderCoord(borderInset, position, screenSize)} ${getTopRightBorderCoord(borderInset, position, screenSize)}`}
-    />
-    <line
-      className='line'
-      id='centre-line'
-      x1={`${window.innerWidth / 2 + 0.5}`}
-      y1={`${window.innerHeight / 2 + 0.5}`}
-      x2={`${centreLineEnd.x}`}
-      y2={`${centreLineEnd.y}`}
-    />
-    <polygon
-      className='triangle'
-      points={`${window.innerWidth / 2 + 0.5},${window.innerHeight / 2 + 0.5} ${polygonCoord1.x},${polygonCoord1.y} ${polygonCoord2.x},${polygonCoord2.y}`}
-    />
-  </svg>
+  return (
+    <svg className='line-container'>
+      <circle className='dot' cx={`${window.innerWidth / 2 + 0.5}`} cy={`${window.innerHeight / 2 + 0.5}`} r='3' />
+      <polygon
+        className='polygon' id='border'
+        points={`${getTopLeftBorderCoord(borderInset, position)} ${getBottomLeftBorderCoord(borderInset, position, screenSize)} ${getBottomRightBorderCoord(borderInset, position, screenSize)} ${getTopRightBorderCoord(borderInset, position, screenSize)}`}
+      />
+      <line
+        className='line'
+        id='centre-line'
+        x1={`${window.innerWidth / 2 + 0.5}`}
+        y1={`${window.innerHeight / 2 + 0.5}`}
+        x2={`${centreLineEnd.x}`}
+        y2={`${centreLineEnd.y}`}
+      />
+      <polygon
+        className='triangle'
+        points={`${window.innerWidth / 2 + 0.5},${window.innerHeight / 2 + 0.5} ${polygonCoord1.x},${polygonCoord1.y} ${polygonCoord2.x},${polygonCoord2.y}`}
+      />
+    </svg>
+  )
 }
