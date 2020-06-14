@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 
 import './App.scss'
 import { Canvas } from './components/Canvas'
-import keyboard from 'keyboardjs'
+import { bindKeyHandlers, unbindKeyHandlers } from './functions/keyHandlers'
 
 const App = () => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
@@ -14,12 +14,7 @@ const App = () => {
     d: false
   }
 
-  const keyDownHandler = (key) => () => { keyObj[key] = true }
-  const keyUpHandler = (key) => () => { keyObj[key] = false }
-
-  Object.keys(keyObj).forEach(key => {
-    keyboard.bind(key, keyDownHandler(key), keyUpHandler(key) )
-  })
+  bindKeyHandlers(keyObj)
 
   const mouseMoveEventListener = (e) => {
     setMousePosition({ x: e.offsetX, y: e.offsetY })
@@ -30,9 +25,7 @@ const App = () => {
     app.addEventListener('mousemove', mouseMoveEventListener)
     return () => {
       window.removeEventListener('mousemove', mouseMoveEventListener)
-      Object.keys(keyObj).forEach(key => {
-        keyboard.unbind(key, keyDownHandler(key), keyUpHandler(key) )
-      })
+      unbindKeyHandlers(keyObj)
     }
   }, [])
 
