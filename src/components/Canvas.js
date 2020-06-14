@@ -9,20 +9,14 @@ import React, { useRef, useState } from 'react'
 import { convertPixelsToPolar } from '../functions/PolarCoordinates/PixelsToPolar/convertPixelsToPolar'
 import { convertPolarToPixels } from '../functions/PolarCoordinates/PolarToPixels/convertPolarToPixels'
 import { useAnimationFrame } from '../functions/useAnimationFrame'
-import { updateKeys } from '../functions/updateKeys'
 import { updateSpeed } from '../functions/updateSpeed'
 import { updateInaccuracy } from '../functions/updateInaccuracy'
 import { updateResultantSpeed } from '../functions/updateResultantSpeed'
 import { updatePosition } from '../functions/updatePosition'
 
-export const Canvas = ({ mousePosition }) => {
+export const Canvas = ({ mousePosition, keyObj }) => {
   const [position, setPosition] = useState({ x: 0, y: 0 })
-  const keyObj = {
-    w: false,
-    a: false,
-    s: false,
-    d: false
-  }
+
   const speedObj = {
     w: 0,
     a: 0,
@@ -36,7 +30,6 @@ export const Canvas = ({ mousePosition }) => {
   let inaccuracyRef = useRef(0)
 
   useAnimationFrame(() => {
-    updateKeys(keyObj)
     updateSpeed(speedObj, keyObj)
     updateResultantSpeed(speedObj, resultantSpeed)
     updateInaccuracy(inaccuracyRef, resultantSpeed)
