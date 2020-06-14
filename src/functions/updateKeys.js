@@ -1,12 +1,7 @@
-export const updateKeys = (keyDownRef, keyUpRef, keysRef) => {
-  Object.keys(keysRef.current).forEach(key => {
-    if (keyDownRef.current === parseInt(key)) {
-      keysRef.current[key] = true
-      keyDownRef.current = null
-    }
-    if (keyUpRef.current === parseInt(key)) {
-      keysRef.current[key] = false
-      keyUpRef.current = null
-    }
+import keyboard from 'keyboardjs'
+
+export const updateKeys = (keyObj) => {
+  Object.keys(keyObj).forEach(key => {
+    keyboard.bind(key, () => { keyObj[key] = true }, () => { keyObj[key] = false })
   })
 }

@@ -4,8 +4,8 @@ import {
   getTopLeftBorderCoord,
   getTopRightBorderCoord
 } from '../functions/Border/borderCoordinates'
-import { borderInset, PI } from '../constants'
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import { borderInset } from '../constants'
+import React, { useRef, useState } from 'react'
 import { convertPixelsToPolar } from '../functions/PolarCoordinates/PixelsToPolar/convertPixelsToPolar'
 import { convertPolarToPixels } from '../functions/PolarCoordinates/PolarToPixels/convertPolarToPixels'
 import { useAnimationFrame } from '../functions/useAnimationFrame'
@@ -13,45 +13,27 @@ import { updateKeys } from '../functions/updateKeys'
 import { updateSpeed } from '../functions/updateSpeed'
 import { updateInaccuracy } from '../functions/updateInaccuracy'
 import { updateResultantSpeed } from '../functions/updateResultantSpeed'
+import { updatePosition } from '../functions/updatePosition'
 
 export const Canvas = ({ mousePosition }) => {
   const [position, setPosition] = useState({ x: 0, y: 0 })
+  const keyObj = {
+    w: false,
+    a: false,
+    s: false,
+    d: false
+  }
   const speedRef = useRef({
-    65: 0,
-    87: 0,
-    68: 0,
-    83: 0
+    w: 0,
+    a: 0,
+    s: 0,
+    d: 0
   })
   const resultantSpeedRef = useRef({
     x: 0,
     y: 0
   })
-  const keyDownRef = useRef()
-  const keyUpRef = useRef()
-  const keysRef = useRef({
-    65: false,
-    87: false,
-    68: false,
-    83: false
-  })
   const inaccuracyRef = useRef(0)
-
-  const keyDownEventListener = useCallback((e) => {
-    keyDownRef.current = e.keyCode
-  }, [])
-
-  const keyUpEventListener = useCallback((e) => {
-    keyUpRef.current = e.keyCode
-  }, [])
-
-  useEffect(() => {
-    window.addEventListener('keydown', keyDownEventListener)
-    window.addEventListener('keyup', keyUpEventListener)
-    return () => {
-      window.removeEventListener('keydown', keyDownEventListener)
-      window.removeEventListener('keyup', keyUpEventListener)
-    }
-  }, [keyDownEventListener, keyUpEventListener])
 
   const screenSize = { x: window.innerWidth, y: window.innerHeight }
   const polarLocation = convertPixelsToPolar({ x: mousePosition.x, y: mousePosition.y }, screenSize)
@@ -61,17 +43,11 @@ export const Canvas = ({ mousePosition }) => {
   const polygonCoord2 = convertPolarToPixels({ r: maxRadius, phi: polarLocation.phi - inaccuracyRef.current }, screenSize)
 
   useAnimationFrame(() => {
-    updateKeys(keyDownRef, keyUpRef, keysRef)
-    updateSpeed(keysRef, speedRef)
+    updateKeys(keyObj)
+    updateSpeed(speedRef, keyObj)
     updateResultantSpeed(speedRef, resultantSpeedRef)
     updateInaccuracy(inaccuracyRef, resultantSpeedRef)
-
-    if (keysRef.current !== undefined) {
-      setPosition(prevPosition => ({ x: prevPosition.x - speedRef.current[65], y: prevPosition.y }))
-      setPosition(prevPosition => ({ x: prevPosition.x, y: prevPosition.y - speedRef.current[87] }))
-      setPosition(prevPosition => ({ x: prevPosition.x + speedRef.current[68], y: prevPosition.y }))
-      setPosition(prevPosition => ({ x: prevPosition.x, y: prevPosition.y +  speedRef.current[83] }))
-    }
+    updatePosition(speedRef, setPosition)
   })
 
   return <svg className='line-container'>
