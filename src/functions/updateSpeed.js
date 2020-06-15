@@ -15,7 +15,7 @@ export const updateSpeed = (speedObj, keyObj, keyPressedFirst) => {
       if (keyObj[key] === true) {
         if (keyObj[getOppositeKey[key]] === true) {
           if (keyPressedFirst[key]) {
-            speedObj[direction] = prevSpeed * deceleration
+            speedObj[direction] = prevSpeed <= 0.16 ? 0 : prevSpeed * deceleration
           }
         } else {
           speedObj[keyToDirectionMap[getOppositeKey[key]]] = 0
@@ -23,7 +23,7 @@ export const updateSpeed = (speedObj, keyObj, keyPressedFirst) => {
         }
       }
       else {
-        speedObj[direction] = prevSpeed * deceleration
+        speedObj[direction] = prevSpeed <= 0.16 ? 0 : prevSpeed * deceleration
       }
     })
   }
