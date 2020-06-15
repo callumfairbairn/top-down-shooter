@@ -1,4 +1,4 @@
 export const updateResultantSpeed = (speedObj, resultantSpeed) => {
-  resultantSpeed.x = speedObj.d - speedObj.a
-  resultantSpeed.y = speedObj.w - speedObj.s
+  resultantSpeed.x = speedObj.right - speedObj.left
+  resultantSpeed.y = speedObj.up - speedObj.right
 }

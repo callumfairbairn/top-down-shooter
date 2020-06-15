@@ -18,10 +18,10 @@ export const Canvas = ({ mousePosition, keyObj }) => {
   const [position, setPosition] = useState({ x: 0, y: 0 })
 
   const speedObj = {
-    w: 0,
-    a: 0,
-    s: 0,
-    d: 0
+    up: 0,
+    left: 0,
+    down: 0,
+    right: 0
   }
   const resultantSpeed = {
     x: 0,
