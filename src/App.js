@@ -14,6 +14,13 @@ const App = () => {
     d: false
   }
 
+  const keyPressedFirst = {
+    w: false,
+    a: false,
+    s: false,
+    d: false
+  }
+
   bindKeyHandlers(keyObj)
 
   const mouseMoveEventListener = (e) => {
@@ -34,6 +41,7 @@ const App = () => {
       <Canvas
         mousePosition={mousePosition}
         keyObj={keyObj}
+        keyPressedFirst={keyPressedFirst}
       />
     </div>
   )
