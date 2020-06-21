@@ -4,7 +4,7 @@ import {
   getTopLeftBorderCoord,
   getTopRightBorderCoord
 } from '../functions/Border/borderCoordinates'
-import { borderInset, getOppositeKey } from '../constants'
+import { borderInset } from '../constants'
 import React, { useRef, useState } from 'react'
 import { convertPixelsToPolar } from '../functions/PolarCoordinates/PixelsToPolar/convertPixelsToPolar'
 import { convertPolarToPixels } from '../functions/PolarCoordinates/PolarToPixels/convertPolarToPixels'
@@ -13,6 +13,7 @@ import { updateSpeed } from '../functions/updateSpeed'
 import { updateInaccuracy } from '../functions/updateInaccuracy'
 import { updateResultantSpeed } from '../functions/updateResultantSpeed'
 import { updatePosition } from '../functions/updatePosition'
+import { updateKeyPressedFirst } from '../functions/updateKeyPressedFirst'
 
 export const Canvas = ({ mousePosition, keyObj, keyPressedFirst }) => {
   const [position, setPosition] = useState({ x: 0, y: 0 })
@@ -65,16 +66,4 @@ export const Canvas = ({ mousePosition, keyObj, keyPressedFirst }) => {
       />
     </svg>
   )
-}
-
-const updateKeyPressedFirst = (keyObj, keyPressedFirst) => {
-  Object.keys(keyObj).forEach(key => {
-    if (keyObj[key] === false) {
-      keyPressedFirst[key] = false
-    } else {
-      if (keyPressedFirst[getOppositeKey[key]] === false) {
-        keyPressedFirst[key] = true
-      }
-    }
-  })
 }
