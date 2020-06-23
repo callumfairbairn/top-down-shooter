@@ -1,10 +1,10 @@
 export const PI = Math.PI
 
-export const borderInset = 100
-export const maxSpeed = 8
-export const startupSpeed = 0.40
-export const acceleration = 1.05
-export const deceleration = 0.80
+export const BORDER_INSET = 100
+export const MAX_SPEED = 8
+export const STARTUP_SPEED = 0.40
+export const ACCELERATION = 1.05
+export const DECELERATION = 0.80
 
 export const getOppositeKey = {
   w: 's',

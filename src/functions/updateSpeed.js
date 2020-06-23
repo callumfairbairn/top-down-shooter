@@ -1,9 +1,9 @@
 import {
-  acceleration,
-  deceleration,
+  ACCELERATION,
+  DECELERATION,
   getOppositeKey,
-  maxSpeed,
-  startupSpeed
+  MAX_SPEED,
+  STARTUP_SPEED
 } from '../constants'
 
 export const updateSpeed = (speedObj, keyObj, keyPressedFirst) => {
@@ -15,24 +15,24 @@ export const updateSpeed = (speedObj, keyObj, keyPressedFirst) => {
       if (keyObj[key] === true) {
         if (keyObj[getOppositeKey[key]] === true) {
           if (keyPressedFirst[key]) {
-            speedObj[direction] = prevSpeed <= 0.16 ? 0 : prevSpeed * deceleration
+            speedObj[direction] = prevSpeed <= 0.16 ? 0 : prevSpeed * DECELERATION
           }
         } else {
           speedObj[keyToDirectionMap[getOppositeKey[key]]] = 0
-          updateSingleDirection(prevSpeed, speedObj, direction, startupSpeed)
+          updateSingleDirection(prevSpeed, speedObj, direction, STARTUP_SPEED)
         }
       }
       else {
-        speedObj[direction] = prevSpeed <= 0.16 ? 0 : prevSpeed * deceleration
+        speedObj[direction] = prevSpeed <= 0.16 ? 0 : prevSpeed * DECELERATION
       }
     })
   }
 }
 
 const updateSingleDirection = (prevSpeed, speedObj, direction, startupSpeed) => {
-  const newSpeed = prevSpeed * acceleration + startupSpeed
-  if (newSpeed > maxSpeed) {
-    speedObj[direction] = maxSpeed
+  const newSpeed = prevSpeed * ACCELERATION + startupSpeed
+  if (newSpeed > MAX_SPEED) {
+    speedObj[direction] = MAX_SPEED
   } else {
     speedObj[direction] = newSpeed
   }

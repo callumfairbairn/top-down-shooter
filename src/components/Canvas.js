@@ -4,7 +4,7 @@ import {
   getTopLeftBorderCoord,
   getTopRightBorderCoord
 } from '../functions/Border/borderCoordinates'
-import { borderInset } from '../constants'
+import { BORDER_INSET } from '../constants'
 import React, { useRef, useState } from 'react'
 import { convertPixelsToPolar } from '../functions/PolarCoordinates/PixelsToPolar/convertPixelsToPolar'
 import { convertPolarToPixels } from '../functions/PolarCoordinates/PolarToPixels/convertPolarToPixels'
@@ -50,7 +50,7 @@ export const Canvas = ({ mousePosition, keyObj, keyPressedFirst }) => {
       <circle className='dot' cx={`${window.innerWidth / 2 + 0.5}`} cy={`${window.innerHeight / 2 + 0.5}`} r='3' />
       <polygon
         className='polygon' id='border'
-        points={`${getTopLeftBorderCoord(borderInset, position)} ${getBottomLeftBorderCoord(borderInset, position, screenSize)} ${getBottomRightBorderCoord(borderInset, position, screenSize)} ${getTopRightBorderCoord(borderInset, position, screenSize)}`}
+        points={`${getTopLeftBorderCoord(BORDER_INSET, position)} ${getBottomLeftBorderCoord(BORDER_INSET, position, screenSize)} ${getBottomRightBorderCoord(BORDER_INSET, position, screenSize)} ${getTopRightBorderCoord(BORDER_INSET, position, screenSize)}`}
       />
       <line
         className='line'
