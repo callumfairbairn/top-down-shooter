@@ -1,11 +1,11 @@
 import { updateSpeed } from './updateSpeed'
-import { ACCELERATION, DECELERATION, MAX_SPEED, STARTUP_SPEED } from '../constants'
+import { ACCELERATION, DECELERATION, MAX_SPEED, MAX_SPEED_SHIFT, STARTUP_SPEED } from '../constants'
 
 describe('updateSpeed', () => {
   describe('when not moving', () => {
     it('does not break if speedObj is undefined', () => {
       const speedObj = undefined
-      const keyObj = { w: false, a: false, s: false, d: false }
+      const keyObj = { w: false, a: false, s: false, d: false, shift: false }
       const keyPressedObj = { w: false, a: false, s: false, d: false }
 
       updateSpeed(speedObj, keyObj, keyPressedObj)
@@ -15,7 +15,7 @@ describe('updateSpeed', () => {
 
     it('speed stays at zero if no keys are pressed', () => {
       const speedObj = { up: 0, left: 0, down: 0, right: 0 }
-      const keyObj = { w: false, a: false, s: false, d: false }
+      const keyObj = { w: false, a: false, s: false, d: false, shift: false }
       const keyPressedObj = { w: false, a: false, s: false, d: false }
 
       updateSpeed(speedObj, keyObj, keyPressedObj)
@@ -27,7 +27,7 @@ describe('updateSpeed', () => {
   describe('when decelerating', () => {
     it('speed decrements if no keys are pressed', () => {
       const speedObj = { up: MAX_SPEED, left: 0, down: 0, right: 0 }
-      const keyObj = { w: false, a: false, s: false, d: false }
+      const keyObj = { w: false, a: false, s: false, d: false, shift: false }
       const keyPressedObj = { w: false, a: false, s: false, d: false }
 
       updateSpeed(speedObj, keyObj, keyPressedObj)
@@ -37,7 +37,7 @@ describe('updateSpeed', () => {
 
     it('speed goes to zero if less than MIN_SPEED', () => {
       const speedObj = { up: 0.15, left: 0, down: 0, right: 0 }
-      const keyObj = { w: false, a: false, s: false, d: false }
+      const keyObj = { w: false, a: false, s: false, d: false, shift: false }
       const keyPressedObj = { w: false, a: false, s: false, d: false }
 
       updateSpeed(speedObj, keyObj, keyPressedObj)
@@ -49,7 +49,7 @@ describe('updateSpeed', () => {
   describe('when accelerating', () => {
     it('speed increases from zero to startup speed if key is pressed', () => {
       const speedObj = { up: 0, left: 0, down: 0, right: 0 }
-      const keyObj = { w: true, a: false, s: false, d: false }
+      const keyObj = { w: true, a: false, s: false, d: false, shift: false }
       const keyPressedObj = { w: true, a: false, s: false, d: false }
 
       updateSpeed(speedObj, keyObj, keyPressedObj)
@@ -59,7 +59,7 @@ describe('updateSpeed', () => {
 
     it('speed increases from initial value to startup speed if key is pressed', () => {
       const speedObj = { up: 1.5, left: 0, down: 0, right: 0 }
-      const keyObj = { w: true, a: false, s: false, d: false }
+      const keyObj = { w: true, a: false, s: false, d: false, shift: false }
       const keyPressedObj = { w: true, a: false, s: false, d: false }
 
       updateSpeed(speedObj, keyObj, keyPressedObj)
@@ -67,9 +67,19 @@ describe('updateSpeed', () => {
       expect(speedObj).toEqual({ up: 1.5 * ACCELERATION + STARTUP_SPEED, left: 0, down: 0, right: 0 })
     })
 
+    it('speed stays at max speed if direction is held', () => {
+      const speedObj = { up: MAX_SPEED, left: 0, down: 0, right: 0 }
+      const keyObj = { w: true, a: false, s: false, d: false, shift: false }
+      const keyPressedObj = { w: true, a: false, s: false, d: false }
+
+      updateSpeed(speedObj, keyObj, keyPressedObj)
+
+      expect(speedObj).toEqual({ up: MAX_SPEED, left: 0, down: 0, right: 0 })
+    })
+
     it('cancels momentum of opposite direction when accelerating in new direction', () => {
       const speedObj = { up: 1.5, left: 0, down: 0, right: 0 }
-      const keyObj = { w: false, a: false, s: true, d: false }
+      const keyObj = { w: false, a: false, s: true, d: false, shift: false }
       const keyPressedObj = { w: false, a: false, s: true, d: false }
 
       updateSpeed(speedObj, keyObj, keyPressedObj)
@@ -81,7 +91,7 @@ describe('updateSpeed', () => {
   describe('when multiple keys are pressed', () => {
     it('acts normally for perpendicular directions', () => {
       const speedObj = { up: 0, left: 0, down: 0, right: 0 }
-      const keyObj = { w: true, a: true, s: false, d: false }
+      const keyObj = { w: true, a: true, s: false, d: false, shift: false }
       const keyPressedObj = { w: true, a: true, s: false, d: false }
 
       updateSpeed(speedObj, keyObj, keyPressedObj)
@@ -91,7 +101,7 @@ describe('updateSpeed', () => {
 
     it('if opposite directions are held, should not increase speed', () => {
       const speedObj = { up: 0, left: 0, down: 0, right: 0 }
-      const keyObj = { w: true, a: false, s: true, d: false }
+      const keyObj = { w: true, a: false, s: true, d: false, shift: false }
       const keyPressedObj = { w: true, a: false, s: true, d: false }
 
       updateSpeed(speedObj, keyObj, keyPressedObj)
@@ -101,7 +111,29 @@ describe('updateSpeed', () => {
 
     it('if direction was held first then opposite is held, should decelerate original direction', () => {
       const speedObj = { up: MAX_SPEED, left: 0, down: 0, right: 0 }
-      const keyObj = { w: true, a: false, s: true, d: false }
+      const keyObj = { w: true, a: false, s: true, d: false, shift: false }
+      const keyPressedObj = { w: true, a: false, s: false, d: false }
+
+      updateSpeed(speedObj, keyObj, keyPressedObj)
+
+      expect(speedObj).toEqual({ up: MAX_SPEED * DECELERATION, left: 0, down: 0, right: 0 })
+    })
+  })
+
+  describe('when holding shift', () => {
+    it('reduces top speed', () => {
+      const speedObj = { up: MAX_SPEED_SHIFT, left: 0, down: 0, right: 0 }
+      const keyObj = { w: true, a: false, s: false, d: false, shift: true }
+      const keyPressedObj = { w: true, a: false, s: false, d: false }
+
+      updateSpeed(speedObj, keyObj, keyPressedObj)
+
+      expect(speedObj).toEqual({ up: MAX_SPEED_SHIFT, left: 0, down: 0, right: 0 })
+    })
+
+    it('reduces speed gradually down to MAX_SPEED_SHIFT', () => {
+      const speedObj = { up: MAX_SPEED, left: 0, down: 0, right: 0 }
+      const keyObj = { w: true, a: false, s: false, d: false, shift: true }
       const keyPressedObj = { w: true, a: false, s: false, d: false }
 
       updateSpeed(speedObj, keyObj, keyPressedObj)

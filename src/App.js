@@ -11,7 +11,8 @@ const App = () => {
     w: false,
     a: false,
     s: false,
-    d: false
+    d: false,
+    shift: false
   }
 
   const keyPressedFirst = {
